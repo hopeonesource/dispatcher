@@ -1,0 +1,37 @@
+hos_sms_dispatcher.hos_message_manager_form:
+  path: '/admin/config/hos_sms_dispatcher/hosmessagemanager'
+  defaults:
+    _form: '\Drupal\hos_sms_dispatcher\Form\HosMessageManagerForm'
+    _title: 'Hos Message Settings Form'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+
+hos_sms_dispatcher.message_test_form:
+  path: '/admin/config/hos_sms_dispatcher/messagetest'
+  defaults:
+    _form: '\Drupal\hos_sms_dispatcher\Form\MessageTestForm'
+    _title: 'HOS Message Test Form'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+
+#hos_sms_dispatcher.main_menu:
+#  path: 'admin/hos_messaging'
+#  defaults:
+#    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+#    _title: 'Messaging'
+#  requirements:
+#    _permission: 'access administration pages'
+
+message_archiver.message_archive_form:
+  path: '/admin/config/message_archiver/message_archive'
+  defaults:
+    _form: '\Drupal\message_archiver\Form\MessageArchiveForm'
+    _title: 'Message Archive Form'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE

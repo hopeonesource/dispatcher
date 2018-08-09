@@ -1,0 +1,30 @@
+#hos_sms_dispatcher.main_menu:
+#  title: 'HOS Messaging'
+#  description: 'Manage HOS messaging.'
+#  route_name: 'hos_sms_dispatcher.main_menu'
+#  weight: -9
+#  parent: 'system.admin'
+
+#hos_sms_dispatcher.hos_message_manager_form:
+#  title: 'HOS Messaging'
+#  route_name: hos_sms_dispatcher.hos_message_manager_form
+#  description: 'Manages sms settings'
+#  #parent: system.admin_config_system
+#  parent: hos_sms_dispatcher.main_menu
+#  weight: 10
+
+#hos_sms_dispatcher.message_test_form:
+#  title: 'HOS Message Test'
+#  route_name: hos_sms_dispatcher.message_test_form
+#  description: 'Message Test'
+#  #parent: system.admin_config_system
+#  parent: hos_sms_dispatcher.main_menu
+#  weight: 20
+
+#message_archiver.message_archiver_form:
+#  title: 'Message Archives'
+#  route_name: message_archiver.message_archive_form
+#  description: 'Message texts archived'
+  #parent: system.admin_config_system
+#  parent: hos_sms_dispatcher.main_menu
+#  weight: 99

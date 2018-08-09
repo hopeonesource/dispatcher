@@ -1,0 +1,5 @@
+name: 'Hos sms dispatcher'
+type: module
+description: 'Dispatches text messages'
+core: 8.x
+package: 'hos'
