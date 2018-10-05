@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\hos_sms_dispatcher\Form;
+namespace Drupal\dispatcher\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\hos_sms_dispatcher\HosMessageManagerInterface;
+use Drupal\dispatcher\DispatchManagerInterface;
 
 /**
  * Class MessageTestForm.
@@ -15,15 +15,15 @@ use Drupal\hos_sms_dispatcher\HosMessageManagerInterface;
 class MessageTestForm extends FormBase {
 
   /**
-   * Drupal\hos_sms_dispatcher\HosMessageManagerInterface definition.
+   * Drupal\dispatcher\HosMessageManagerInterface definition.
    *
-   * @var \Drupal\hos_sms_dispatcher\HosMessageManagerInterface
+   * @var \Drupal\dispatcher\DispatchManagerInterface
    */
   protected $hosSmsDispatchManager;
   /**
    * Constructs a new MessageTestForm object.
    */
-  public function __construct(HosMessageManagerInterface $hosSmsDispatchManager) {
+  public function __construct(DispatchManagerInterface $hosSmsDispatchManager) {
         $this->hosSmsDispatchManager = $hosSmsDispatchManager;
   }
 
@@ -43,7 +43,7 @@ class MessageTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('hos_sms_dispatcher.messagetest');
+    $config = $this->config('dispatcher.messagetest');
     $form['test_phone_numbers'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Phone Number'),

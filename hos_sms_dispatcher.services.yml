@@ -1,4 +1,0 @@
-services:
-  hos_sms_dispatch.manager:
-    class: Drupal\hos_sms_dispatcher\HosMessageManager
-    arguments: ['@http_client', '@logger.factory']

@@ -1,4 +1,4 @@
-# About hos_sms_dispatcher
+# About dispatcher
 This Drupal 8 module dispatches text messages/alert to the sms provider to send to service receipents. The dispatch service (sendMessage) accepts a text message and number to send this message to. A number of http responses will be returned from the SMS provider from which the status of the text message/alert can be determined.
 
 ## Inputs

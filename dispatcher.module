@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains hos_sms_dispatcher.module.
+ * Contains dispatcher.module.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -10,10 +10,10 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_help().
  */
-function hos_sms_dispatcher_help($route_name, RouteMatchInterface $route_match) {
+function dispatcher_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    // Main module help for the hos_sms_dispatcher module.
-    case 'help.page.hos_sms_dispatcher':
+    // Main module help for the dispatcher module.
+    case 'help.page.dispatcher':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Dispatches text messages') . '</p>';

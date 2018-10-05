@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\hos_sms_dispatcher\Functional;
+namespace Drupal\Tests\dispatcher\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -8,7 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Simple test to ensure that main page loads with module enabled.
  *
- * @group hos_sms_dispatcher
+ * @group dispatcher
  */
 class LoadTest extends BrowserTestBase {
 
@@ -17,7 +17,7 @@ class LoadTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['hos_sms_dispatcher'];
+  public static $modules = ['dispatcher'];
 
   /**
    * A user with permission to administer site configuration.
