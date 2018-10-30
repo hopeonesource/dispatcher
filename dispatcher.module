@@ -22,3 +22,13 @@ function dispatcher_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
+/**
+ * Implements hook_cron().
+ */
+function dispatcher_cron() {
+    //log to dblog
+    \Drupal::logger('dispatcher')->notice('sending out message now');
+    $dispatcher = Drupal::service('dispatch.manager');
+    //replace asterisk with number you want to send message to
+    $dispatcher->sendMessage('Say hello to my friend', '$$$$$$$$$');
+}

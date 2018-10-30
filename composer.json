@@ -1,0 +1,22 @@
+{
+  "name": "drupal/dispatcher",
+  "description": "Dispatches messages to SMS Framework to be sent out to a preconfigured gateway.",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "homepage": "",
+  "support": {
+    "issues": "https://github.com/hopeonesource/dispatcher/issues",
+    "source": "https://github.com/hopeonesource/dispatcher"
+  },
+  "authors": [
+    {
+      "name": "Hope One Source Dev",
+      "homepage": "",
+      "role": ""
+    }
+  ],
+  "require": {
+    "drupal/core": "^8.0",
+    "drupal/sms_twilio": "^1.0"
+  }
+}

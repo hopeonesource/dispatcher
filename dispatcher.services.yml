@@ -1,4 +1,4 @@
 services:
   dispatch.manager:
     class: Drupal\dispatcher\DispatchManager
-    arguments: ['@http_client', '@logger.factory']
+    arguments: ['@sms.provider.default']

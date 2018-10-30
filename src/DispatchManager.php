@@ -2,34 +2,35 @@
 
 namespace Drupal\dispatcher;
 
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\sms\Provider\SmsProviderInterface;
+use Drupal\sms\Entity\SmsMessage;
+use Drupal\sms\Entity\SmsGateway;
 
 /**
- * Class HosMessageManager.
+ * Class DispatchManager.
  */
 class DispatchManager implements DispatchManagerInterface {
+    /**
+     * @var SmsProviderInterface
+     */
+    protected $smsProvider;
 
-  protected $httpClient;
-  protected $loggerChannelFactory;
+    public function __construct(SmsProviderInterface $smsProvider) {
+        $this->smsProvider = $smsProvider;
+    }
 
-  /**
-   * HosMessageManager constructor.
-   *
-   * @param \GuzzleHttp\Client $httpClient
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerChannelFactory
-   */
-  public function __construct(Client $httpClient, LoggerChannelFactoryInterface $loggerChannelFactory) {
-    $this->httpClient = $httpClient;
-    $this->loggerChannelFactory = $loggerChannelFactory;
-  }
-
-  /**
-   * @inheritdoc
-   */
-  public function sendMessage($message, $number){
-
-    $this->loggerChannelFactory->get('dispatcher')->notice($message.' sent to '.$number);
-      }
+    /**
+     * @inheritdoc
+     */
+    public function sendMessage($messageText, $number) {
+        $date = new DrupalDateTime();
+        $message = SmsMessage::create()
+            ->addRecipient($number)
+            ->setMessage($messageText)
+            ->setAutomated(1);
+        $message->setSendTime($date->format('U'));
+        $message->setGateway(SmsGateway::load('twilio'));
+        $this->smsProvider->send($message);
+    }
 }
