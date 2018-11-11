@@ -28,10 +28,12 @@ Then we will follow this tutorial -- [https://www.jeffgeerling.com/blog/2018/get
 3. You'll need a Drupal codebase, so go somewhere on your computer and use Git to clone it: `git clone --branch 8.6.x https://git.drupal.org/project/drupal.git lando-d8`
 4. Change into the Drupal directory: `cd lando-d8`
 5. Run `lando init`, `answering drupal8`, `.`, and `Lando D8` (the terminal wizard changes this to `lando-d-8` as seen below).
+![Database Setup](/images/lando_init.png)
 6. Run lando start, and wait while all the Docker containers are set up.
 7. Run lando composer install (this will use Composer/PHP inside the Docker container to build Drupal's Composer dependencies).
 8. Go to the site's URL in your web browser, and complete the Drupal install wizard with these options:
     Database host: database 
     Database name, username, password: drupal8
+![Database Setup](/images/database_setup.png)
 
 *Make note, on the Drupal 8 install, the database host name field is under 'Advanced Options' during the database configuration section. Ensure that instead of `localhost`, you use the name `database` for field `host`.*
