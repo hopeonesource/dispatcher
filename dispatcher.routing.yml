@@ -1,22 +1,22 @@
-dispatcher.hos_message_manager_form:
-  path: '/admin/config/dispatcher/hosmessagemanager'
+dispatcher.config_form:
+  path: '/admin/config/dispatcher'
   defaults:
-    _form: '\Drupal\dispatcher\Form\HosMessageManagerForm'
-    _title: 'Hos Message Settings Form'
+    _form: '\Drupal\dispatcher\Form\DispatcherConfigForm'
+    _title: 'Dispatcher Settings Form'
   requirements:
     _permission: 'access administration pages'
   options:
     _admin_route: TRUE
 
-dispatcher.message_test_form:
-  path: '/admin/config/dispatcher/messagetest'
-  defaults:
-    _form: '\Drupal\dispatcher\Form\MessageTestForm'
-    _title: 'HOS Message Test Form'
-  requirements:
-    _permission: 'access administration pages'
-  options:
-    _admin_route: TRUE
+#dispatcher.message_test_form:
+#  path: '/admin/config/dispatcher/messagetest'
+#  defaults:
+#    _form: '\Drupal\dispatcher\Form\MessageTestForm'
+#    _title: 'HOS Message Test Form'
+#  requirements:
+#    _permission: 'access administration pages'
+#  options:
+#    _admin_route: TRUE
 
 #dispatcher.main_menu:
 #  path: 'admin/hos_messaging'
@@ -27,12 +27,12 @@ dispatcher.message_test_form:
 #    _permission: 'access administration pages'
 
 #To be moved to message_archive module
-message_archiver.message_archive_form:
-  path: '/admin/config/message_archiver/message_archive'
-  defaults:
-    _form: '\Drupal\message_archiver\Form\MessageArchiveForm'
-    _title: 'Message Archive Form'
-  requirements:
-    _permission: 'access administration pages'
-  options:
-    _admin_route: TRUE
+#message_archiver.message_archive_form:
+#  path: '/admin/config/message_archiver/message_archive'
+#  defaults:
+#    _form: '\Drupal\message_archiver\Form\MessageArchiveForm'
+#    _title: 'Message Archive Form'
+#  requirements:
+#    _permission: 'access administration pages'
+#  options:
+#    _admin_route: TRUE

@@ -2,3 +2,7 @@ services:
   dispatch.manager:
     class: Drupal\dispatcher\DispatchManager
     arguments: ['@sms.provider.default']
+
+  plugin.manager.dispatcher:
+    class: Drupal\dispatcher\Plugin\Content\ContentTypeManager
+    parent: default_plugin_manager
