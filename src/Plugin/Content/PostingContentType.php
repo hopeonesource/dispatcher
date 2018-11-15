@@ -22,6 +22,8 @@ class PostingContentType extends AbstractContent {
     }
     public function getContentTypeFields(){
         $types = ['string', 'text_with_summary'];
+        $listFields = array();
+        
         $fieldDefinitions = $this->entityFieldManager->getFieldDefinitions('node', $this->getPluginId());
         foreach ($fieldDefinitions as $field_name => $field_definition) {
             if (!empty($field_definition->getTargetBundle())) {

@@ -30,7 +30,7 @@ function dispatcher_cron() {
     //log to dblog
     \Drupal::logger('dispatcher')->notice('sending out message now');
     $dispatcher = Drupal::service('dispatch.manager');
-    //replace asterisk with number you want to send message to
+    //replace $$$$ with number you want to send message to
     $dispatcher->sendMessage('Say hello to my friend', '$$$$$$$$$');
 }
 
@@ -47,7 +47,8 @@ function dispatcher_entity_insert(EntityInterface $entity) {
     if (strcmp($contentType, $bundle) == 0){
         $messageField = $dispatcherConfig->get('message_field');
         $message = $entity->get($messageField)->getValue();
+        
         $dispatcher = Drupal::service('dispatch.manager');
-        $dispatcher->sendMessage($message[0]['value'], '$$$$$$$$$$');
+        $dispatcher->sendMessage($message[0]['value'], '$$$$$$');
     }
 }

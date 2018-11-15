@@ -33,6 +33,25 @@ class DispatcherConfigForm extends ConfigFormBase {
         $this->plugin_manager = \Drupal::service('plugin.manager.dispatcher');
         $plugin_definitions = $this->plugin_manager->getDefinitions();
 
+        // replace with dependency injection
+        $contentTypes = \Drupal::service('entity.manager')->getStorage('node_type')->loadMultiple();
+        $contentTypesList = [];
+        $content_type_options = array();
+
+        foreach ($contentTypes as $contentType) {
+            array_push($contentTypesList, $contentType->id());
+        }
+
+        //check if plugin id is part of the list of available content types
+        foreach ($plugin_definitions as $key => $plugin_definition) {
+            if (!in_array($key, $contentTypesList) ){
+                unset($plugin_definitions[$key]);
+            }
+            else{
+                $content_type_options[$plugin_definition['id']] = $plugin_definition['name'];
+            }
+        }
+
         $contentType = $config->get('content_type');
         $messageField = $config->get('message_field');
 
@@ -44,11 +63,11 @@ class DispatcherConfigForm extends ConfigFormBase {
         }
 
         $fields = [];
-        $content_type_options = array();
-        foreach ($plugin_definitions as $plugin_definition){
-            $content_type_options[$plugin_definition['id']] = $plugin_definition['name'];
-            $fields = $instance->getContentTypeFields();
-        }
+        
+        //foreach ($plugin_definitions as $plugin_definition){
+            //$content_type_options[$plugin_definition['id']] = $plugin_definition['name'];
+            $fields = $instance->getContentTypeFields(); 
+        //}
 
         $form['#attached']['library'][] = 'dispatcher/dispatcher_settings';
         $form['content_type'] = array (
