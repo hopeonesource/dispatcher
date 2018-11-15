@@ -1,17 +1,17 @@
-#dispatcher.main_menu:
-#  title: 'HOS Messaging'
-#  description: 'Manage HOS messaging.'
-#  route_name: 'dispatcher.main_menu'
-#  weight: -9
-#  parent: 'system.admin'
+dispatcher.main_menu:
+  title: 'Dispatcher'
+  description: 'Manage HOS messaging.'
+  route_name: 'dispatcher.main_menu'
+  weight: -9
+  parent: 'system.admin'
 
-#dispatcher.hos_message_manager_form:
-#  title: 'HOS Messaging'
-#  route_name: dispatcher.hos_message_manager_form
-#  description: 'Manages sms settings'
+dispatcher.settings:
+  title: 'Dispatcher settings'
+  route_name: dispatcher.config_form
+  description: 'Manages dispatcher settings'
 #  #parent: system.admin_config_system
-#  parent: dispatcher.main_menu
-#  weight: 10
+  parent: dispatcher.main_menu
+  weight: 10
 
 #dispatcher.message_test_form:
 #  title: 'HOS Message Test'

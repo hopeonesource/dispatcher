@@ -2,7 +2,7 @@ dispatcher.config_form:
   path: '/admin/config/dispatcher'
   defaults:
     _form: '\Drupal\dispatcher\Form\DispatcherConfigForm'
-    _title: 'Dispatcher Settings Form'
+    _title: 'Dispatcher Settings'
   requirements:
     _permission: 'access administration pages'
   options:
@@ -18,13 +18,13 @@ dispatcher.config_form:
 #  options:
 #    _admin_route: TRUE
 
-#dispatcher.main_menu:
-#  path: 'admin/hos_messaging'
-#  defaults:
-#    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
-#    _title: 'Messaging'
-#  requirements:
-#    _permission: 'access administration pages'
+dispatcher.main_menu:
+  path: '/admin/dispatcher'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Dispatcher'
+  requirements:
+    _permission: 'access administration pages'
 
 #To be moved to message_archive module
 #message_archiver.message_archive_form:
