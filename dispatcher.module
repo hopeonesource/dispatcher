@@ -48,6 +48,6 @@ function dispatcher_entity_insert(EntityInterface $entity) {
         $messageField = $dispatcherConfig->get('message_field');
         $message = $entity->get($messageField)->getValue();
         $dispatcher = Drupal::service('dispatch.manager');
-        $dispatcher->sendMessage($message[0]['value'], '5419083040');
+        $dispatcher->sendMessage($message[0]['value'], '$$$$$$$$$$');
     }
 }
