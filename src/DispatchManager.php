@@ -52,10 +52,11 @@ class DispatchManager implements DispatchManagerInterface {
     protected function assessResults($results) {
         foreach ($results as $result) {
             foreach ($result->getReports() as $report) {
-                if (strcmp($report->getStatus(), SmsMessageReportStatus::QUEUED) == 0) {
-                    $this->alertSlack('*Success* from the Twilio API!');
+                $status = $report->getStatus();
+                if (strcmp($status, SmsMessageReportStatus::QUEUED) == 0) {
+                    $this->alertSlack('*Success* from the Twilio API!', $status);
                 } else {
-                    $this->alertSlack('*Failure* from the Twilio API!');
+                    $this->alertSlack('*Failure* from the Twilio API!', $status);
                 }
             }
         }
@@ -70,13 +71,19 @@ class DispatchManager implements DispatchManagerInterface {
      * Slack-apps can be integrated with messaging to individual
      * users for testing.
      */
-    protected function alertSlack($message) {
+    protected function alertSlack($message, $status) {
+        $color = strcmp($status, SmsMessageReportStatus::QUEUED) == 0 
+            ? '#00ff00' : '#ff0000';
         $this->httpClient->post('https://hooks.slack.com/services/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', [
             'headers' => [
                 'Content-type' => 'application/json'
             ],
             'json' => [
-                'text' => $message
+                'text' => $message,
+                'attachments' => array([
+                    'text' => 'Message Status: *' . $status . '*',
+                    'color'    => $color,
+                ])
             ]
         ]);
     }
