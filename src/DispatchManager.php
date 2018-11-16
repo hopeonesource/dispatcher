@@ -71,7 +71,7 @@ class DispatchManager implements DispatchManagerInterface {
      * users for testing.
      */
     protected function alertSlack($message) {
-        $this->httpClient->post('https://hooks.slack.com/services/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', [
+        $this->httpClient->post('https://hooks.slack.com/services/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', [
             'headers' => [
                 'Content-type' => 'application/json'
             ],
