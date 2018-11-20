@@ -56,10 +56,6 @@ class DispatchManager implements DispatchManagerInterface {
         $message = $this->prepareMessage($messageText, $number);
         try {
             $this->smsProvider->queue($message);
-        } catch (RecipientRouteException $e) {
-            \Drupal::logger('dispatch manager')->warning('RecipientRouteException thrown in DispatchManager->queueMessage.\n\n' . serialize($e));
-        } catch (SmsDirectionException $e) {
-            \Drupal::logger('dispatch manager')->warning('SmsDirection Exception thrown in DispatchManager->queueMessage.\n\n' . serialize($e));
         } catch (SmsException $e) {
             \Drupal::logger('dispatch manager')->warning('SmsException thrown in DispatchManager->queueMessage.\n\n' . serialize($e));
         }
