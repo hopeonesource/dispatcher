@@ -4,8 +4,11 @@ namespace Drupal\dispatcher;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\sms\Provider\SmsProviderInterface;
+use Drupal\sms\Direction;
 use Drupal\sms\Entity\SmsMessage;
 use Drupal\sms\Entity\SmsGateway;
+use Drupal\sms\Exception\RecipientRouteException;
+use Drupal\sms\Exception\SmsDirectionException;
 use Drupal\sms\Message\SmsMessageReportStatus;
 
 /**
@@ -35,11 +38,18 @@ class DispatchManager implements DispatchManagerInterface {
         $message = SmsMessage::create()
             ->addRecipient($number)
             ->setMessage($messageText)
-            ->setAutomated(1);
+            ->setAutomated(1)
+            ->setDirection(DIRECTION::OUTGOING);
         $message->setSendTime($date->format('U'));
         $message->setGateway(SmsGateway::load('twilio'));
-        $results = $this->smsProvider->send($message);
-        $this->assessResults($results);
+        try {
+            $results = $this->smsProvider->queue($message);
+            $this->assessResults($results);
+        } catch (RecipientRouteException $e) {
+            \Drupal::logger('dispatch manager')->warning('RecipientRouteException thrown in DispatchManager->sendMessage');
+        } catch (SmsDirectionException $e) {
+            \Drupal::logger('dispatch manager')->warning('SmsDirection Exception thrown in DispatchManager->sendMessage');            
+        }
     }
 
     /**
