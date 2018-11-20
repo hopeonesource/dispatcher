@@ -3,6 +3,7 @@
 namespace Drupal\dispatcher;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use GuzzleHttp\Client;
 use Drupal\sms\Provider\SmsProviderInterface;
 use Drupal\sms\Direction;
 use Drupal\sms\Entity\SmsMessage;
@@ -25,9 +26,9 @@ class DispatchManager implements DispatchManagerInterface {
      */
     protected $httpClient;
 
-    public function __construct(SmsProviderInterface $smsProvider) {
+    public function __construct(SmsProviderInterface $smsProvider, Client $httpClient) {
         $this->smsProvider = $smsProvider;
-        $this->httpClient = \Drupal::httpClient();
+        $this->httpClient = $httpClient;
     }
 
     /**
