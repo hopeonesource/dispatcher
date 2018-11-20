@@ -35,17 +35,27 @@ class DispatchManager implements DispatchManagerInterface {
      * @inheritdoc
      */
     public function sendMessage($messageText, $number) {
-        $date = new DrupalDateTime();
-        $message = SmsMessage::create()
-            ->addRecipient($number)
-            ->setMessage($messageText)
-            ->setAutomated(1)
-            ->setDirection(DIRECTION::OUTGOING);
-        $message->setSendTime($date->format('U'));
-        $message->setGateway(SmsGateway::load('twilio'));
+        $message = $this->prepareMessage($messageText, $number);
+        $result = $this->smsProvider->send($message);
+        $smsMessageResult = current($result)->getResult();
+        $reports = $smsMessageResult->getReports();
+        $smsDeliveryReport = current($reports);
+        
+        return array(
+            'message' => $smsDeliveryReport->getStatusMessage(),
+            'code' => $smsDeliveryReport->getStatus(),
+            'To_number' => $number
+        );
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function queueMessage($messageText, $number) {
+        $message = $this->prepareMessage($messageText, $number);
         try {
-            $results = $this->smsProvider->queue($message);
-            $this->assessResults($results);
+            $this->smsProvider->queue($message);
         } catch (RecipientRouteException $e) {
             \Drupal::logger('dispatch manager')->warning('RecipientRouteException thrown in DispatchManager->sendMessage');
         } catch (SmsDirectionException $e) {
@@ -54,48 +64,27 @@ class DispatchManager implements DispatchManagerInterface {
     }
 
     /**
-     * Sending a message successfully does not return DELIVERED,
-     * that status can only be gathered through Status Callback
-     * https://www.twilio.com/docs/sms/tutorials/how-to-confirm-delivery
+     * @param $message
      *
-     * @var SmsMessageResult[]
+     * message to be sent
+     *
+     * @param $number
+     *
+     * phone number that should receive this message
+     *
+     * @return SmsMessage
+     *
+     * the prepared message with recipient and message text
      */
-    protected function assessResults($results) {
-        foreach ($results as $result) {
-            foreach ($result->getReports() as $report) {
-                $status = $report->getStatus();
-                if (strcmp($status, SmsMessageReportStatus::QUEUED) == 0) {
-                    $this->alertSlack('*Success* from the Twilio API!', $status);
-                } else {
-                    $this->alertSlack('*Failure* from the Twilio API!', $status);
-                }
-            }
-        }
-    }
-
-    /**
-     * Send a message to a slack channel.
-     *
-     * Uses Slack App to send message. Follow instructions here:
-     * https://api.slack.com/slack-apps
-     *
-     * Slack-apps can be integrated with messaging to individual
-     * users for testing.
-     */
-    protected function alertSlack($message, $status) {
-        $color = strcmp($status, SmsMessageReportStatus::QUEUED) == 0 
-            ? '#00ff00' : '#ff0000';
-        $this->httpClient->post('https://hooks.slack.com/services/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', [
-            'headers' => [
-                'Content-type' => 'application/json'
-            ],
-            'json' => [
-                'text' => $message,
-                'attachments' => array([
-                    'text' => 'Message Status: *' . $status . '*',
-                    'color'    => $color,
-                ])
-            ]
-        ]);
+    private function prepareMessage($messageText, $number) {
+        $date = new DrupalDateTime();
+        $message = SmsMessage::create()
+            ->addRecipient($number)
+            ->setMessage($messageText)
+            ->setAutomated(1)
+            ->setDirection(DIRECTION::OUTGOING);
+        $message->setSendTime($date->format('U'));
+        $message->setGateway(SmsGateway::load('twilio'));
+        return $message;
     }
 }

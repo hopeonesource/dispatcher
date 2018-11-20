@@ -6,21 +6,22 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use \Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_help().
  */
 function dispatcher_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    // Main module help for the dispatcher module.
-    case 'help.page.dispatcher':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Dispatches text messages') . '</p>';
-      return $output;
+    switch ($route_name) {
+        // Main module help for the dispatcher module.
+        case 'help.page.dispatcher':
+            $output = '';
+            $output .= '<h3>' . t('About') . '</h3>';
+            $output .= '<p>' . t('Dispatches text messages') . '</p>';
+            return $output;
 
-    default:
-  }
+        default:
+    }
 }
 /**
  * Implements hook_cron().
@@ -29,6 +30,26 @@ function dispatcher_cron() {
     //log to dblog
     \Drupal::logger('dispatcher')->notice('sending out message now');
     $dispatcher = Drupal::service('dispatch.manager');
-    //replace asterisk with number you want to send message to
+    //replace $$$$ with number you want to send message to
     $dispatcher->sendMessage('Say hello to my friend', '$$$$$$$$$');
+}
+
+/**
+ * Implements hook_entity_insert
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function dispatcher_entity_insert(EntityInterface $entity) {
+    $dispatcherConfig = Drupal::service('config.factory')->getEditable('dispatcher.config');
+    $bundle = $entity->bundle();
+    $contentType = $dispatcherConfig->get('content_type');
+
+    if (strcmp($contentType, $bundle) == 0){
+        $messageField = $dispatcherConfig->get('message_field');
+        $message = $entity->get($messageField)->getValue();
+
+        $dispatcher = Drupal::service('dispatch.manager');
+        $results = $dispatcher->sendMessage($message[0]['value'], '$$$$$$$$$$');
+        Drupal::service('messenger')->addMessage(json_encode($results));
+    }
 }
