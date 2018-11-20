@@ -1,0 +1,5 @@
+dispatcher_settings:
+  version: 1.0
+  css:
+    theme:
+      css/dispatch_settings.css: {}
