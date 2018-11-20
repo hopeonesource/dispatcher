@@ -36,6 +36,7 @@ class DispatchManager implements DispatchManagerInterface {
         $smsMessageResult = current($result)->getResult();
         $reports = $smsMessageResult->getReports();
         $smsDeliveryReport = current($reports);
+
         return array(
             'message' => $smsDeliveryReport->getStatusMessage(),
             'code' => $smsDeliveryReport->getStatus(),
