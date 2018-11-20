@@ -31,6 +31,15 @@ class DispatchManager implements DispatchManagerInterface {
             ->setAutomated(1);
         $message->setSendTime($date->format('U'));
         $message->setGateway(SmsGateway::load('twilio'));
-        $this->smsProvider->send($message);
+        $result = $this->smsProvider->send($message);
+
+        $smsMessageResult = current($result)->getResult();
+        $reports = $smsMessageResult->getReports();
+        $smsDeliveryReport = current($reports);
+        return array(
+            'message' => $smsDeliveryReport->getStatusMessage(),
+            'code' => $smsDeliveryReport->getStatus(),
+            'To_number' => $number
+        );
     }
 }
