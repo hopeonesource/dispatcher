@@ -12,16 +12,16 @@ use \Drupal\Core\Entity\EntityInterface;
  * Implements hook_help().
  */
 function dispatcher_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    // Main module help for the dispatcher module.
-    case 'help.page.dispatcher':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Dispatches text messages') . '</p>';
-      return $output;
+    switch ($route_name) {
+        // Main module help for the dispatcher module.
+        case 'help.page.dispatcher':
+            $output = '';
+            $output .= '<h3>' . t('About') . '</h3>';
+            $output .= '<p>' . t('Dispatches text messages') . '</p>';
+            return $output;
 
-    default:
-  }
+        default:
+    }
 }
 /**
  * Implements hook_cron().
@@ -47,7 +47,7 @@ function dispatcher_entity_insert(EntityInterface $entity) {
     if (strcmp($contentType, $bundle) == 0){
         $messageField = $dispatcherConfig->get('message_field');
         $message = $entity->get($messageField)->getValue();
-        
+
         $dispatcher = Drupal::service('dispatch.manager');
         $results = $dispatcher->sendMessage($message[0]['value'], '$$$$$$$$$$');
         Drupal::service('messenger')->addMessage(json_encode($results));
