@@ -11,11 +11,11 @@ namespace Drupal\dispatcher\Plugin\Content;
  */
 interface ContentTypeInterface {
     /**
-     *
+     *@param array $fieldTypes
      *
      * @return array of available content type fields
      */
-    public function getContentTypeFields();
+    public function getContentTypeFields($fieldTypes = array());
     /**
      * Return the machine name of the content type associated with this plugin.
      *

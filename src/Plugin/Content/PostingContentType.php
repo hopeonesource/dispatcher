@@ -20,22 +20,24 @@ class PostingContentType extends AbstractContent {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
         $this->entityFieldManager = $entityFieldManager;
     }
-    public function getContentTypeFields(){
-        $types = ['string', 'text_with_summary'];
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentTypeFields($types = array()){
         $listFields = array();
         
         $fieldDefinitions = $this->entityFieldManager->getFieldDefinitions('node', $this->getPluginId());
         foreach ($fieldDefinitions as $field_name => $field_definition) {
             if (!empty($field_definition->getTargetBundle())) {
                 if (in_array($field_definition->getType(), $types)){
-                    $listFields[$field_name]['type'] = $field_definition->getType();
+                    $listFields[$field_name] = $field_definition->getType();
                 }
             }
         }
         $fields = [];
 
-        foreach (array_keys($listFields) as $name) {
-            $fields[$name] = $name;
+        foreach ($listFields as $key => $name) {
+            $fields[$key] = $key;
         }
         return $fields;
     }

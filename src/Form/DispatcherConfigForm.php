@@ -54,6 +54,7 @@ class DispatcherConfigForm extends ConfigFormBase {
 
         $contentType = $config->get('content_type');
         $messageField = $config->get('message_field');
+        $recipientField = $config->get('recipient_field');
 
         if (isset($contentType)){
             $instance = $this->plugin_manager->createInstance($contentType);
@@ -62,12 +63,8 @@ class DispatcherConfigForm extends ConfigFormBase {
             $instance = $this->plugin_manager->createInstance(array_values($plugin_definitions)[0]['id']);
         }
 
-        $fields = [];
-        
-        //foreach ($plugin_definitions as $plugin_definition){
-            //$content_type_options[$plugin_definition['id']] = $plugin_definition['name'];
-            $fields = $instance->getContentTypeFields(); 
-        //}
+
+        $fields = $instance->getContentTypeFields(['string', 'text_with_summary']);
 
         $form['#attached']['library'][] = 'dispatcher/dispatcher_settings';
         $form['content_type'] = array (
@@ -75,10 +72,10 @@ class DispatcherConfigForm extends ConfigFormBase {
             '#type' => 'select',
             '#options' => $content_type_options,
             '#default_value' => isset($contentType) ? $contentType : '',
-            '#ajax' => array(
+            /*'#ajax' => array(
                 'callback' => '::getFields',
                 'event' => 'change',
-            ),
+            ),*/
             '#required' => TRUE,
         );
         $form['message_field'] = array(
@@ -87,7 +84,17 @@ class DispatcherConfigForm extends ConfigFormBase {
             '#options' => $fields,
             '#default_value' => isset($messageField) ? $messageField : '',
             '#required' => TRUE,
-            '#prefix' => '<div id="message-fields">',
+            '#prefix' => '<div id="message-fields" class="message-fields">',
+            '#suffix' => '</div>',
+        );
+        $fields = $instance->getContentTypeFields(['integer', 'entity_reference', 'string', 'text_with_summary']);
+        $form['recipient_field'] = array(
+            '#title' => t('Recipient fields'),
+            '#type' => 'checkboxes',
+            '#options' => $fields,
+            '#default_value' => isset($recipientField) ? $recipientField : '',
+            '#required' => TRUE,
+            '#prefix' => '<div id="recipient-fields" class="recipient-fields">',
             '#suffix' => '</div>',
         );
 
@@ -108,20 +115,24 @@ class DispatcherConfigForm extends ConfigFormBase {
         $this->config('dispatcher.config')
             ->set('content_type', $form_state->getValue('content_type'))
             ->set('message_field', $form_state->getValue('message_field'))
+            ->set('recipient_field', $form_state->getValue('recipient_field'))
             ->save();
     }
+    //@Todo to be removed as configuration will support a single plugin only
     public function getFields(array &$form, FormStateInterface $form_state){
         $config = $this->config('dispatcher.config');
         $contentType = $config->get('content_type');
         $msgField = $config->get('message_field');
+        $recipField = $config->get('recipient_field');
 
         $selectedContentType = $form_state->getValue('content_type');
 
         $ajax_response = new AjaxResponse();
         $instance = $this->plugin_manager->createInstance($selectedContentType);
-        $fields = $instance->getContentTypeFields();
+        $fields = $instance->getContentTypeFields(['string', 'text_with_summary']);
 
         $msg = '';
+        //@todo to be taken out to a private function
         foreach ($fields as $field){
             if ($field == $msgField && $contentType == $selectedContentType){
                 $msg .= "<div class=\"js-form-item form-item js-form-type-radio form-type-radio js-form-item-message-field form-item-message-field\">";
@@ -134,8 +145,24 @@ class DispatcherConfigForm extends ConfigFormBase {
                 $msg .= "</div>";
             }
         }
+        $ajax_response->addCommand(new HtmlCommand('.message-fields .fieldset-wrapper', $msg));
 
-        $ajax_response->addCommand(new HtmlCommand('.fieldset-wrapper', $msg));
+        $fields = $instance->getContentTypeFields(['integer', 'entity_reference', 'string', 'text_with_summary']);
+        $msg = '';
+        foreach ($fields as $field){
+            if ($field == $recipField && $contentType == $selectedContentType){
+                $msg .= "<div class=\"js-form-item form-item js-form-type-radio form-type-radio js-form-item-recipient-field form-item-recipient-field\">";
+                $msg .= "<input checked=\"checked\" type=radio name=recipient_field class=\"form-radio\" required=required  value=".$field."><label for=\"edit-recipient-field-title\" class=\"option\" >".$field."</label>";
+                $msg .= "</div>";
+            }
+            else{
+                $msg .= "<div class=\"js-form-item form-item js-form-type-radio form-type-radio js-form-item-recipient-field form-item-recipient-field\">";
+                $msg .= "<input type=radio name=recipient_field class=\"form-radio\" required=required value=".$field."><label for=\"edit-recipient-field-title\" class=option>".$field."</label>";
+                $msg .= "</div>";
+            }
+        }
+
+        $ajax_response->addCommand(new HtmlCommand('.recipient-fields .fieldset-wrapper', $msg));
 
         return $ajax_response;
     }

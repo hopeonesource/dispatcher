@@ -7,6 +7,7 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use \Drupal\Core\Entity\EntityInterface;
+use Drupal\dispatcher\Util\Util;
 
 /**
  * Implements hook_help().
@@ -40,6 +41,7 @@ function dispatcher_cron() {
  * @param \Drupal\Core\Entity\EntityInterface $entity
  */
 function dispatcher_entity_insert(EntityInterface $entity) {
+
     $dispatcherConfig = Drupal::service('config.factory')->getEditable('dispatcher.config');
     $bundle = $entity->bundle();
     $contentType = $dispatcherConfig->get('content_type');
@@ -48,8 +50,42 @@ function dispatcher_entity_insert(EntityInterface $entity) {
         $messageField = $dispatcherConfig->get('message_field');
         $message = $entity->get($messageField)->getValue();
 
+        $recipientFields = $dispatcherConfig->get('recipient_field');
+
+        $fields = array();
+        foreach ($recipientFields as $recipientField){
+            if ($recipientField != '0'){
+                $fields[$recipientField] = $entity->get($recipientField)->getValue()[0]['target_id'];
+            }
+        }
+        $numbers = getRecipientNumbers($fields);
+
         $dispatcher = Drupal::service('dispatch.manager');
-        $results = $dispatcher->sendMessage($message[0]['value'], '$$$$$$$$$$');
+        foreach ($numbers as $number){
+            $results = $dispatcher->sendMessage($message[0]['value'], $number);
+        }
         Drupal::service('messenger')->addMessage(json_encode($results));
     }
+}
+//@todo relocate to own service and create probably custom module to house it
+function getRecipientNumbers($fields = array()){
+
+    $numbers = array();
+    $userStorage = \Drupal::service('entity_type.manager')->getStorage('user');
+    $query = $userStorage->getQuery();
+    $group = $query->orConditionGroup();
+
+    foreach ($fields as $key => $field){
+        $group->condition($key, $field);
+    }
+
+    $ids = $query->condition($group)->execute();
+    $users = $userStorage->loadMultiple($ids);
+    foreach ($users as $user){
+        $name = $user->getUsername();
+        if ($name != '0'){
+            array_push($numbers, intVal($name));
+        }
+    }
+    return $numbers;
 }
