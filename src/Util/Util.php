@@ -16,7 +16,5 @@ class Util {
         else{
             //@todo create and throw type not supported exception
         }
-        print_r($field);
-        print_r(gettype($field)); die();
     }
 }
